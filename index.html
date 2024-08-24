@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 class="title">GENDER PREDICTION</h1>
+    <main>
+        <div class="container">
+            <label>Enter Your First Name</label>
+            <input placeholder="Your Name" onkeydown="predict(event)">
+        </div>
+        <p id="prediction"></p>
+    </main>
+
+    <script>
+        console.log("pria hitam berotot")
+
+        const base_api = "https://api.genderize.io"
+
+        function showResult(name, gender, probability,) {
+            const predictionElement = document.getElementById("prediction");
+            const probabilityPercentage = probability * 100;
+            
+            const predictionText = `Hi ${name}, Your Are Probably ${probabilityPercentage}% ${gender}`;
+
+            if (probabilityPercentage == 0) {
+                predictionElement.textContent = "ERROR"
+                predictionElement.style.color = "red"
+            }else {
+                predictionElement.textContent = predictionText;
+                predictionElement.style.color = "black"
+            }
+        }
+
+        async function predict(event){    
+            if(event.key == "Enter") {
+                const firstName = event.target.value;
+                const queryUrl = `${base_api}/?name=${firstName}`;
+
+                const response = await fetch(queryUrl);
+                const result = await response.json();
+                showResult(result.name, result.gender, result.probability);
+            }
+        }
+    </script>
+</body>
+</html>
